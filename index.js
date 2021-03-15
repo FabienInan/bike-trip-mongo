@@ -35,23 +35,59 @@ router.route("/getArticles").get((req, res) => {
     if (err) {
       res.send(err);
     } else {
-      res.send(result);
+      const resultToSend = result.map(((article) => {
+          return {
+            _id: article._id,
+            date: article.date,
+            data: {
+              fr: {
+                title: article.data.fr.title,
+                content: article.data.fr && Buffer.from(article.data.fr.content).toString('utf8')
+              },
+              en: {
+                title: article.data.en.title,
+                content: article.data.en.content && Buffer.from(article.data.en.content).toString('utf8')
+              },
+            }
+          }
+        }));
+      res.send(resultToSend);
     }
-  });
+  })
 });
 
 router.route("/saveArticle").post((req, res) => {
 
   const article = new Article();
-  article.data = req.body.dat;
+  article.data = req.body.data;
   article.date = req.body.date;
 
   article.save()
     .then(result => {
-      res.status(201).json({
-        message: "Handling POST requests to /articles",
-        article: result
+      if (result.id) {
+        res.status(201).json({
+          message: "Handling POST requests to /articles",
+          article: result
+        });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        error: err
       });
+    });
+});
+
+router.route("/deleteArticle").delete((req, res) => {
+
+  Article.deleteOne({_id: req.body.id})
+    .then(result => {
+      if (result.deletedCount === 1) {
+        res.status(201).json({
+          message: "Handling DELETE requests to /articles"
+        });
+      }
     })
     .catch(err => {
       console.log(err);

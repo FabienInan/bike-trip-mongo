@@ -4,7 +4,22 @@ const Schema = mongoose.Schema;
 
 let article = new Schema({
   data: {
-    type: Buffer
+      fr: {
+        title: {
+            type: String
+        },
+        content: {
+            type: Buffer
+        },
+      },
+      en: {
+        title: {
+            type: String
+        },
+        content: {
+            type: Buffer
+        },
+      }
   },
   date: {
     type: Date

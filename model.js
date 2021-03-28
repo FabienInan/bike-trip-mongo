@@ -8,6 +8,9 @@ let article = new Schema({
         title: {
             type: String
         },
+        instagramId: {
+            type: String
+        },
         content: {
             type: Buffer
         },

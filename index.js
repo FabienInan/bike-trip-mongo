@@ -42,10 +42,12 @@ router.route("/getArticles").get((req, res) => {
             data: {
               fr: {
                 title: article.data.fr.title,
+                instagramId: article.data.fr.instagramId,
                 content: article.data.fr && Buffer.from(article.data.fr.content).toString('utf8')
               },
               en: {
                 title: article.data.en.title,
+                instagramId: article.data.en.instagramId,
                 content: article.data.en.content && Buffer.from(article.data.en.content).toString('utf8')
               },
             }

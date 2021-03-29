@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-let article = new Schema({
+let articleSchema = new Schema({
   data: {
       fr: {
         title: {
@@ -29,4 +29,24 @@ let article = new Schema({
   }
 });
 
-module.exports = mongoose.model("Article", article);
+let userSchema = new Schema({
+  data: {
+      isAdmin: {
+        type: Boolean
+      },
+      login: {
+        type: String
+      },
+      pwd: {
+        type: String
+      },
+  },
+});
+
+const article = mongoose.model("article", articleSchema);
+const user = mongoose.model("user", userSchema);
+
+module.exports = {
+  article: article,
+  user: user
+}

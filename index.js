@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require('body-parser');
 
-const Article = require("./model");
+const {article} = require('./model');
+const {user} = require('./model');
 
 const app = express();
 
@@ -31,7 +32,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/", router);
 
 router.route("/getArticles").get((req, res) => {
-  Article.find({}, function (err, result) {
+  article.find({}, function (err, result) {
     if (err) {
       res.send(err);
     } else {
@@ -58,13 +59,35 @@ router.route("/getArticles").get((req, res) => {
   })
 });
 
+router.route("/isAdmin").post((req, res) => {
+  const login = req.body.login;
+  const pwd = req.body.pwd;
+  user.find({}, (err, result) => {
+    if (err) {
+      res.send(err);
+    } else {
+      const userDb = result.find(
+        data => data.login === login && data.pwd === pwd
+      );
+      /*const resultToSend = 
+        {
+          isAdmin: result.f(userData => {
+            console.log(userData.login);
+            userData.login === login && userData.pwd === pwd && userData.isAdmin
+          }).length > 0
+        };*/
+      res.send(null);
+    }
+  })
+});
+
 router.route("/saveArticle").post((req, res) => {
 
-  const article = new Article();
-  article.data = req.body.data;
-  article.date = req.body.date;
+  const articleInstance = new article();
+  articleInstance.data = req.body.data;
+  articleInstance.date = req.body.date;
 
-  article.save()
+  articleInstance.save()
     .then(result => {
       if (result.id) {
         res.status(201).json({
@@ -83,7 +106,7 @@ router.route("/saveArticle").post((req, res) => {
 
 router.route("/deleteArticle").delete((req, res) => {
 
-  Article.deleteOne({_id: req.body.id})
+  article.deleteOne({_id: req.body.id})
     .then(result => {
       if (result.deletedCount === 1) {
         res.status(201).json({

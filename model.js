@@ -61,10 +61,11 @@ let userSchema = new Schema({
 });
 
 const article = mongoose.model("article", articleSchema);
-const article = mongoose.model("comment", commentSchema);
+const comment = mongoose.model("comment", commentSchema);
 const user = mongoose.model("user", userSchema);
 
 module.exports = {
   article: article,
+  comment: comment,
   user: user
 }

@@ -32,7 +32,7 @@ let articleSchema = new Schema({
 let commentSchema = new Schema({
   data: {
       articleId: {
-        type: ObjectId
+        type: mongoose.Types.ObjectId
       },
       comment: {
         type: String

@@ -66,17 +66,14 @@ router.route("/isAdmin").post((req, res) => {
     if (err) {
       res.send(err);
     } else {
-      const userDb = result.find(
-        data => data.login === login && data.pwd === pwd
-      );
-      /*const resultToSend = 
+      const resultToSend = 
         {
-          isAdmin: result.f(userData => {
-            console.log(userData.login);
-            userData.login === login && userData.pwd === pwd && userData.isAdmin
+          isAdmin: result.filter(userData => {
+            const user = userData.toJSON();
+            return user.login === login && user.pwd === pwd && user.isAdmin
           }).length > 0
-        };*/
-      res.send(null);
+        };
+      res.send(resultToSend);
     }
   })
 });

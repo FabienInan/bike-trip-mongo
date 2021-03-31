@@ -29,6 +29,23 @@ let articleSchema = new Schema({
   }
 });
 
+let commentSchema = new Schema({
+  data: {
+      articleId: {
+        type: ObjectId
+      },
+      comment: {
+        type: String
+      },
+      author: {
+        type: String
+      },
+      date: {
+        type: Date
+      }
+  }
+});
+
 let userSchema = new Schema({
   data: {
       isAdmin: {
@@ -44,6 +61,7 @@ let userSchema = new Schema({
 });
 
 const article = mongoose.model("article", articleSchema);
+const article = mongoose.model("comment", commentSchema);
 const user = mongoose.model("user", userSchema);
 
 module.exports = {

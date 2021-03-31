@@ -4,6 +4,7 @@ const cors = require("cors");
 const bodyParser = require('body-parser');
 
 const {article} = require('./model');
+const {comment} = require('./model');
 const {user} = require('./model');
 
 const app = express();
@@ -59,6 +60,16 @@ router.route("/getArticles").get((req, res) => {
   })
 });
 
+router.route("/getComments/:articleId").get((req, res) => {
+  comment.find({ articleId: eq.params.articleId}, function (err, result) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(result);
+    }
+  })
+});
+
 router.route("/isAdmin").post((req, res) => {
   const login = req.body.login;
   const pwd = req.body.pwd;
@@ -89,6 +100,28 @@ router.route("/saveArticle").post((req, res) => {
       if (result.id) {
         res.status(201).json({
           message: "Handling POST requests to /articles",
+          article: result
+        });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        error: err
+      });
+    });
+});
+
+router.route("/saveComment").post((req, res) => {
+
+  const commentInstance = new comment();
+  commentInstance.data = req.body.data;
+
+  commentInstance.save()
+    .then(result => {
+      if (result.id) {
+        res.status(201).json({
+          message: "Handling POST requests to /comments",
           article: result
         });
       }

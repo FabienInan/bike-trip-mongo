@@ -13,7 +13,8 @@ const PORT = 4000;
 app.use(cors());
 
 mongoose.connect("mongodb+srv://Fabien:biketrip@cluster0.envcj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", {
-  useNewUrlParser: true
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 });
 
 const connection = mongoose.connection;
@@ -61,7 +62,8 @@ router.route("/getArticles").get((req, res) => {
 });
 
 router.route("/getComments/:articleId").get((req, res) => {
-  comment.find({ articleId: eq.params.articleId}, function (err, result) {
+  console.log('articleId: req.params.articleId', req.params.articleId);
+  comment.find({'data.articleId': req.params.articleId}, function (err, result) {
     if (err) {
       res.send(err);
     } else {
@@ -141,6 +143,24 @@ router.route("/deleteArticle").delete((req, res) => {
       if (result.deletedCount === 1) {
         res.status(201).json({
           message: "Handling DELETE requests to /articles"
+        });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        error: err
+      });
+    });
+});
+
+router.route("/deleteComment").delete((req, res) => {
+
+  comment.deleteOne({_id: req.body.id})
+    .then(result => {
+      if (result.deletedCount === 1) {
+        res.status(201).json({
+          message: "Handling DELETE requests to /comments"
         });
       }
     })
